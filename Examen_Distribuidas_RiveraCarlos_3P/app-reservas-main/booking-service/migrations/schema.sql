@@ -1,0 +1,11 @@
+-- Simple schema for bookings table (Postgres)
+CREATE TABLE IF NOT EXISTS bookings (
+  id BIGSERIAL PRIMARY KEY,
+  userId VARCHAR(255) NOT NULL,
+  fecha TIMESTAMP WITH TIME ZONE NOT NULL,
+  servicio VARCHAR(255) NOT NULL,
+  canceladaEn TIMESTAMP WITH TIME ZONE,
+  estado VARCHAR(20) NOT NULL DEFAULT 'activo',
+  createdAt TIMESTAMP WITH TIME ZONE DEFAULT now(),
+  updatedAt TIMESTAMP WITH TIME ZONE DEFAULT now()
+);

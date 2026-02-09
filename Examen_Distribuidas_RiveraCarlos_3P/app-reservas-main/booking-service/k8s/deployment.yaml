@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: booking-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: booking-service
+  template:
+    metadata:
+      labels:
+        app: booking-service
+    spec:
+      containers:
+        - name: booking-service
+          image: booking-service:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5002
+          envFrom:
+            - configMapRef:
+                name: booking-config
+          env:
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: booking-secrets
+                  key: db-user
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: booking-secrets
+                  key: db-pass
+          readinessProbe:
+            httpGet:
+              path: /graphql
+              port: 5002
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /graphql
+              port: 5002
+            initialDelaySeconds: 15
+            periodSeconds: 30
+            timeoutSeconds: 5
